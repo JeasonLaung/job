@@ -1,0 +1,11 @@
+<view class="i-class i-tab-bar-item">
+    <i-badge dot="{{ dot }}" count="{{ dot ? 0 : count }}">
+        <view>
+            <!--<i-icon wx:if="{{ icon || currentIcon }}" i-class="i-tab-bar-item-icon {{ current ? 'item-index--i-tab-bar-item-icon-current' : '' }}" color="{{ current ? currentColor : '' }}" type="{{ current ? currentIcon : icon }}" size="22"></i-icon>-->
+            <icon wx:if="{{ icon || currentIcon }}" class="iconfont icon-{{ current ? currentIcon : icon }} i-tab-bar-item-icon {{ current ? 'item-index--i-tab-bar-item-icon-current' : '' }}" style="font-size:22px;color:{{ current ? currentColor : '' }};"></icon>
+            <image wx:else class="i-tab-bar-item-img" src="{{ current ? currentImg : img }}"></image>
+            <view class="i-tab-bar-item-title {{ current ? 'i-tab-bar-item-title-current' : '' }}" wx:if="{{ current && currentColor }}" style="color: {{ currentColor }}">{{ title }}</view>
+            <view class="i-tab-bar-item-title {{ current ? 'i-tab-bar-item-title-current' : '' }}" wx:else>{{ title }}</view>
+        </view>
+    </i-badge>
+</view>
