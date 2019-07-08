@@ -15,7 +15,7 @@ export default {
   methods: {
     handleNew () {
       if (!this.api) {
-        mpvue.showToast({
+        return mpvue.showToast({
           title: '没传入api地址【api】'
         })
       }

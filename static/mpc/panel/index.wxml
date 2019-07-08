@@ -1,0 +1,16 @@
+<!--components/m-panel/m-panel.wxml-->
+<view class="m-panel m-class">
+  <view class="m-panel__header">
+    <view class="m-panel__header_title">
+      {{title}}
+    </view>
+    <view><slot name="more"/></view>
+  </view>
+  
+  <view class="{{inner ? 'm-panel__inner' : ''}}">
+    <slot/>
+  </view>
+</view>
+<view class='m-note' wx:if="{{note}}">
+  {{note}}
+</view>

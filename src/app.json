@@ -1,21 +1,23 @@
 {
   "pages": [
-    "pages/job/main",
-
-    "pages/job/jobDetail/main",
-    "pages/job/seekerDetail/main",
-    "pages/job/companyDetail/main",
-
-    "pages/job/seeker/resume/main",
-    "pages/job/seeker/resume/education/main",
-    "pages/job/seeker/resume/experience/main",
-    "pages/job/seeker/resume/skill/main",
+    "pages/job/seeker/resume/expect/main",
+    "pages/job/seeker/resume/url/main",
+    "pages/job/seeker/resume/introduce/main",
+    "pages/job/seeker/resume/prize/main",
     "pages/job/seeker/resume/project/main",
+    "pages/job/seeker/resume/experience/main",
+    "pages/job/seeker/resume/education/main",
+    "pages/job/main",
     "pages/job/seeker/resume/language/main",
     "pages/job/seeker/resume/cert/main",
-    "pages/job/seeker/resume/url/main",
-    "pages/job/seeker/resume/prize/main",
-    "pages/job/seeker/resume/expect/main",
+    "pages/job/seeker/resume/skill/main",
+    "pages/job/seeker/resume/main",
+    "pages/job/companyDetail/main",
+    "pages/job/jobDetail/main",
+
+    "pages/job/seekerDetail/main",
+
+    "pages/job/seeker/resume/basic/main",
     "pages/job/seeker/application/main",
     "pages/job/seeker/collect/main",
     "pages/job/seeker/followCompany/main",
@@ -35,8 +37,13 @@
     "pages/counter/main"
   ],
   "usingComponents": {
+    "i-load-more": "../static/iview/load-more/index",
     "i-tab-bar": "../static/iview/tab-bar/index",
-    "i-tab-bar-item": "../static/iview/tab-bar-item/index"
+    "i-tab-bar-item": "../static/iview/tab-bar-item/index",
+    "i-tag": "../static/iview/tag/index",
+
+    "m-panel": "../static/mpc/panel/index",
+    "m-load": "../static/mpc/load/index"
   },
   "window": {
     "backgroundTextStyle": "light",

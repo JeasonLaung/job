@@ -1,0 +1,41 @@
+.window{
+  background-color: #fff;
+}
+.loading{
+  background-color: #40B1F0;
+  text-align: center;
+  color: #fff;
+  font-size: 27rpx;
+  line-height: 70rpx;
+  transition: height .5s;
+}
+.loadMore{
+  line-height: 80rpx;
+  font-size: 27rpx;
+  text-align: center;
+  color: #aaa;
+}
+.page{
+  height: 100%;
+}
+.beforeLoaded{
+  height: 100%;
+  width: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.noResult-img{
+  height: 200rpx;
+  width: 200rpx;
+}
+.noResult-text{
+  color: #aaa;
+  margin-top: 20rpx; 
+  font-size: 27rpx;
+  text-align: center;
+}
+.beforeLoaded-img{
+  height: 207rpx;
+  width: 140rpx;
+}

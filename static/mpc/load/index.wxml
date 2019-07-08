@@ -1,0 +1,39 @@
+<view
+class="window"
+style="height:{{height}};">
+  <scroll-view
+  wx:if="{{firstLoad}}"
+  scroll-y
+  enable-back-to-top="{{true}}"
+  bindscrolltoupper="_bindscrolltoupper"
+  bindscrolltolower="_bindscrolltolower"
+  bindtouchstart="_bindtouchstart"
+  bindtouchmove="_bindtouchmove"
+  bindtouchend="_bindtouchend"
+  bindscroll="_bindscroll"
+  class="page">
+    <view class='loading' style="height: {{(ingNew ? 70 : 0) + 'rpx'}};">{{ingNew ? '正在刷新' : '刷新成功'}}</view>
+    <view wx:if="{{!empty}}">
+      <view>
+        <slot></slot>
+      </view>
+      <view class="loadMore">
+        {{noMore ? '到底了' : '正在加载更多'}}
+      </view>
+    </view>
+    <view wx:else class="beforeLoaded">
+      <div>
+        <div>
+          <image src="/static/images/no-result.png" class="noResult-img" mode="aspectFit"/>
+        </div>
+        
+        <view class="noResult-text">没有结果</view>
+      </div>
+    </view>
+  </scroll-view>
+  <view
+  wx:else
+  class="beforeLoaded">
+    <image src="/static/images/going.gif" class="beforeLoaded-img" />
+  </view>
+</view>

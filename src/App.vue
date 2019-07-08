@@ -7,7 +7,7 @@ import store from '@/store'
 import cookie from '@/utils/cookie'
 import {json2url} from '@/utils'
 import {SIGNATURE_NAME} from '@/config'
-const testing = false
+const testing = true
 
 export default {
 
@@ -124,5 +124,129 @@ page{
   -o-transition: width 2s;
 }
 
+
+@import "../static/style/editResume.wxss";
+@import "../static/style/weui.wxss";
+
+.ell{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.form-title{
+  font-size:26rpx;
+  color: #999;
+  padding:36rpx 0 24rpx 30rpx;
+}
+.form-id{
+  display: block;
+}
+.btn-formId{
+  border:0;
+  padding:0;
+  margin:0;
+  line-height: 1.5;
+  background: transparent;
+  font-size:28rpx; 
+  text-align: left;
+  border-radius:0;
+}
+.btn-formId::after{
+  border:0;
+}
+.weui-vcode-btn{
+  color: #5AA2E7;
+  font-size:32rpx;
+}
+.weui-vcode-btn:active{
+  color: #5AA2E7;
+}
+/* 文字  */
+.font-gray-24{
+  font-size: 24rpx;
+  line-height: 1.5;
+  color: #999999;
+  word-break: break-all;
+}
+.font-gray-26{
+  font-size: 26rpx;
+  line-height: 1.5;
+  color: #999999;
+  word-break: break-all;
+}
+.font-34{
+  font-size: 34rpx;
+  line-height: 48rpx;
+  color: #222222;
+  word-break: break-all;
+}
+.font-36{
+  font-size: 36rpx;
+  line-height: 50rpx;
+  color: #000000;
+  word-break: break-all;
+}
+/* 按钮  */
+.btn-w690{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width:690rpx;
+  height: 88rpx;
+  line-height: 1; 
+  background-color: #5AA2E7!important;
+  font-size: 36rpx;
+}
+/* 右箭头 */
+.arrow-right{
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+  border-width: 2px 2px 0 0;
+  border-color: #C8C8CD;
+  border-style: solid;
+  -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  margin-left:10rpx;
+}
+/* css 十字形  */
+.icon-cross{
+  position:relative;
+  width:36rpx;
+  height: 36rpx;
+  overflow: hidden;
+}
+.icon-cross::before{
+  content: ""; 
+  position: absolute;
+  top:15rpx;
+  width:100%;
+  height: 6rpx;
+  background-color: #5AA2E7;
+}
+.icon-cross::after{
+  content: "";
+  position: absolute;
+  left:15rpx;
+  width:6rpx;
+  height: 100%;
+  background-color: #5AA2E7;
+}
+.input-placeholder,.textarea-placeholder,.placeholder{
+   color: #999; 
+}
+/* 扩展可点击区域  */
+.extend-clickable-area{
+  position: relative;
+}
+.extend-clickable-area::before{
+  content:'';
+  position:absolute;
+  top:-10rpx;
+  bottom:-10rpx;
+  left:-10rpx;
+  right:-10rpx;
+}
 
 </style>
