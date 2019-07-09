@@ -19,7 +19,7 @@
                 <div class="weui-label">掌握程度</div>
             </div> 
             <div class="weui-cell__bd">
-                <picker :value="item.levelIndex" :range="langLevels" range-key="level_name" @change="model[index].levelIndex=$event.target.value">
+                <picker :value="item.levelIndex" :range="langLevels" range-key="level_name" @change="model[index].level_name=langLevels[$event.target.value].level_name;model[index].levelIndex=$event.target.value">
                     <div class="level picker-inner">
                       <span class="level-val">{{langLevels[item.levelIndex].level_name}}</span>
                       <span class="arrow-right"></span>

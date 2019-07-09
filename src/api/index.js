@@ -1,5 +1,6 @@
 import axios from '@/utils/axios'
 import store from '@/store'
+import cookie from '@/utils/cookie'
 import {ACTION_RESPONSE} from '@/config'
 // import {promisify} from '@/utils'
 // 获取位置
@@ -142,4 +143,44 @@ export const getGolbalVar = () => {
   }).then(data => {
     store.commit('setGlobalVar', data)
   })
+}
+
+export const getCities = () => {
+  let c = cookie.get('city')
+  if (c) {
+    return new Promise((resolve, reject) => {
+      resolve(c)
+    })
+  } else {
+    return new Promise((resolve, reject) => {
+      axios({
+        url: '/index/index/area_list'
+      }).then(data => {
+        cookie.set('city', data.list)
+        resolve(data)
+      }).catch(data => {
+        reject(data)
+      })
+    })
+  }
+}
+
+export const getTypes = () => {
+  let c = cookie.get('type')
+  if (c) {
+    return new Promise((resolve, reject) => {
+      resolve(c)
+    })
+  } else {
+    return new Promise((resolve, reject) => {
+      axios({
+        url: '/job/position/type_list'
+      }).then(data => {
+        cookie.set('type', data.list)
+        resolve(data)
+      }).catch(data => {
+        reject(data)
+      })
+    })
+  }
 }

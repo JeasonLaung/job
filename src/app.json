@@ -1,5 +1,15 @@
 {
   "pages": [
+
+    "pages/job/search/main",
+    "pages/job/main",
+    "pages/job/company/publishJob/main",
+    
+    "pages/job/seekerDetail/main",
+    "pages/chooseCity/main",
+    "pages/chooseType/main",
+    "pages/job/seeker/resume/main",
+    "pages/job/seeker/resume/basic/main",
     "pages/job/seeker/resume/expect/main",
     "pages/job/seeker/resume/url/main",
     "pages/job/seeker/resume/introduce/main",
@@ -7,24 +17,19 @@
     "pages/job/seeker/resume/project/main",
     "pages/job/seeker/resume/experience/main",
     "pages/job/seeker/resume/education/main",
-    "pages/job/main",
     "pages/job/seeker/resume/language/main",
     "pages/job/seeker/resume/cert/main",
     "pages/job/seeker/resume/skill/main",
-    "pages/job/seeker/resume/main",
     "pages/job/companyDetail/main",
     "pages/job/jobDetail/main",
 
-    "pages/job/seekerDetail/main",
 
-    "pages/job/seeker/resume/basic/main",
     "pages/job/seeker/application/main",
     "pages/job/seeker/collect/main",
     "pages/job/seeker/followCompany/main",
     "pages/job/seeker/message/main",
 
 
-    "pages/job/company/publishJob/main",
     "pages/job/company/job/main",
     "pages/job/company/invite/main",
     "pages/job/company/application/main",

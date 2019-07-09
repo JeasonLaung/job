@@ -1,4 +1,5 @@
 import axios from '@/utils/axios'
+import cookie from '@/utils/cookie'
 
 // 职位选项
 export const getJobType = () => {
@@ -120,7 +121,7 @@ export const readMyResume = (data = {}) => {
 // 求职者简历
 export const readResume = (data = {}) => {
   return axios({
-    url: '/job/resume/index',
+    url: '/job/resume/info',
     data
   })
 }
@@ -186,6 +187,20 @@ export const readResumeCert = () => {
 export const readResumePrize = () => {
   return axios({
     url: '/job/resume/award_info'
+  })
+}
+// 求职者简历
+export const readResumeBasic = (data = {}) => {
+  return axios({
+    url: '/job/resume/base_info',
+    data
+  })
+}
+export const saveResumeBasic = (data = {}) => {
+  return axios({
+    url: '/job/resume/base_info_post',
+    data,
+    method: 'POST'
   })
 }
 export const saveResumeExperience = (data = {}) => {
@@ -265,5 +280,44 @@ export const saveResumeUnion = (data = {}) => {
 export const optionsEducation = () => {
   return axios({
     url: '/job/education/education_option'
+  })
+}
+
+export const optionsJob = () => {
+  return new Promise((resolve, reject) => {
+    axios({
+      url: '/job/position/get_type'
+    }).then(data => {
+      cookie.set('education', data.educationList)
+      cookie.set('experience', data.experienceList)
+      resolve()
+    }).catch(data => {
+      reject(data)
+    })
+  })
+}
+
+export const educationType = () => {
+  let c = cookie.get('education')
+  return new Promise((resolve, reject) => {
+    if (c) {
+      resolve(c)
+    } else {
+      optionsJob().then(data => {
+        resolve(cookie.get('education'))
+      })
+    }
+  })
+}
+export const experienceType = () => {
+  let c = cookie.get('experience')
+  return new Promise((resolve, reject) => {
+    if (c) {
+      resolve(c)
+    } else {
+      optionsJob().then(data => {
+        resolve(cookie.get('experience'))
+      })
+    }
   })
 }

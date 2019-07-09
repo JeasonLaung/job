@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div class="page">
       <div
       v-if="api == 'readJob'">
@@ -204,7 +203,7 @@ export default {
     handleChange (e) {
       this.api = e.target.key
       if (this.api !== 'person') {
-        this.handleNew(this.api)
+        // this.handleNew(this.api)
       }
     },
     handleAuth () {

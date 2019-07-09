@@ -9,9 +9,9 @@
        <img class="avatar-img" v-else src="/static/images/default_avatar2.png" ></img> 
     </div>
     <div class="info-box">
-      <div class="" v-if="basic.real_name">
+      <div class="" v-if="basic.name">
         <div class="name-sex">
-          <span class="name font-36">{{basic.real_name}}</span>
+          <span class="name font-36">{{basic.name}}</span>
           <i style="display:inline" class="icon-sexm iconfont" v-if="basic.sex == 1" />
           <i style="display:inline" class="icon-sexw iconfont" v-else-if="basic.sex == 2" />
         </div>
@@ -316,14 +316,16 @@ export default {
       this.$go(path)
     }
   },
-  onLoad (options) {
-    this.options = options
+  onShow () {
     readMyResume().then(data => {
       this.resume = data
     })
     readMyBasic().then(data => {
       this.basic = data
     })
+  },
+  onLoad (options) {
+    this.options = options
   }
 }
 </script>
