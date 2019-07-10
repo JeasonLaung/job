@@ -10,8 +10,19 @@ export const getJobType = () => {
 
 // 职位列表筛选
 export const getSearchType = () => {
-  return axios({
-    url: '/job/position/search_type'
+  let c = cookie.get('search_type')
+  return new Promise((resolve, reject) => {
+    if (!c) {
+      axios({
+        url: '/job/position/search_type'
+      }).then(data => {
+        resolve(data)
+      }).catch(data => {
+        reject(data)
+      })
+    } else {
+      resolve(c)
+    }
   })
 }
 // 添加编辑职位
@@ -37,10 +48,28 @@ export const deleteJob = (data = {}) => {
   })
 }
 
+export const readCompany = (data = {}) => {
+  if (data['id']) {
+    return axios({
+      url: '/job/company/info',
+      data
+    })
+  } else {
+    return axios({
+      url: '/job/company/index',
+      data
+    })
+  }
+}
 export const readJob = (data = {}) => {
   if (data['id']) {
     return axios({
       url: '/job/position/position_info',
+      data
+    })
+  } else if (data['company_id']) {
+    return axios({
+      url: '/job/position/company_position',
       data
     })
   } else {

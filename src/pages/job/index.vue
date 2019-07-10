@@ -3,8 +3,13 @@
     <div class="page">
       <div
       v-if="api == 'readJob'">
+        <form report-submit @submit="$collect">
+          <div style="background-color:#fff;border-bottom:1rpx solid #eee">
+            <button form-type="submit" @click="$go('/pages/job/search/main?type=job')" class="init iibtn">搜索/筛选</button>
+          </div>
+        </form>
         <m-load
-        height="calc(100vh - 100rpx)"
+        height="calc(100vh - 200rpx)"
         :firstLoad="firstLoads['readJob']"
         :noMore="noMores['readJob']"
         :empty="emptys['readJob']"
@@ -49,8 +54,43 @@
           <div>
             <news 
             :one="item"
-            v-for="(item, index) in results['job']"
+            v-for="(item, index) in results['companyNews']"
             :key="index"></news>
+          </div>
+        </m-load>
+      </div>
+      <div
+      v-else-if="api == 'readCompany'">
+        <search
+        @confirm="handleNew('readCompany', {keyword: keywordTmp['readCompany']})"
+        @change="keywordTmp['readCompany'] = $event;"
+        :value="keywordTmp['readCompany']"
+        >
+          <div slot="left">
+            <div @click="$go('/pages/chooseCity/main')">
+              <i class="iconfont icon-location" style="display:inline"></i>{{companyCity.name}}
+            </div>
+          </div>
+        </search>
+        <m-load
+        height="calc(100vh - 200rpx)"
+        :firstLoad="firstLoads['readCompany']"
+        :noMore="noMores['readCompany']"
+        :empty="emptys['readCompany']"
+        @new="handleNew('readCompany')"
+        @more="handleMore('readCompany')">
+          <div
+          v-for="(item, index) in results['readCompany']"
+          :key="index"
+          style="border-bottom:1rpx solid #eee"
+          >
+            <company 
+            :avatar="item.logo"
+            :title="item.company"
+            :one="item"
+            @click="$go('/pages/job/companyDetail/main?id='+item.id)"
+            >
+            </company>
           </div>
         </m-load>
       </div>
@@ -155,6 +195,7 @@
 
     <i-tab-bar :current="api" @change="handleChange" fixed color="#40B1F0">
       <i-tab-bar-item key="readJob" icon="job" current-icon="job" title="岗位"></i-tab-bar-item>
+      <i-tab-bar-item key="readCompany" icon="company" current-icon="company" title="企业"></i-tab-bar-item>
       <i-tab-bar-item key="seekerNews" icon="news" current-icon="news" title="资讯"></i-tab-bar-item>
       <i-tab-bar-item key="person" icon="person" current-icon="person" count="3" title="我的"></i-tab-bar-item>
     </i-tab-bar>
@@ -164,25 +205,39 @@
 </template>
 
 <script>
+import company from '@/components/job/company'
 import sLoadFuck from '@/mixins/sLoadFuck'
 import card from '@/components/card'
 import job from '@/components/job/job'
 import store from '@/store'
 import news from '@/components/news'
-import {readJob, seekerNews, companyNews, readSeeker} from '@/api/job'
+import search from '@/components/job/search'
+import {readJob, seekerNews, companyNews, readSeeker, readCompany} from '@/api/job'
+import cityStore from '@/pages/chooseCity/store'
+import {qqmapsdk} from '@/utils/mapsdk'
 export default {
   mixins: [sLoadFuck],
   components: {
     card,
     job,
-    news
+    search,
+    news,
+    company
   },
 
   data () {
     return {
+      keywordTmp: {
+        readCompany: ''
+      },
+      inCity: {id: '', name: ''},
       current: 'job',
       tabbarList: ['job', 'news', 'person'],
-      duration: 500
+      duration: 500,
+      companyCity: {
+        id: '',
+        name: ''
+      }
     }
   },
   computed: {
@@ -190,11 +245,42 @@ export default {
       return store.state.userInfo
     }
   },
+  onShow () {
+    let _this = this
+    if (!this.companyCity.id) {
+      // 没有选中城市
+      if (!cityStore.state.city.name) {
+        // 还没有定位
+        if (!cityStore.state.inCity.id) {
+          qqmapsdk.reverseGeocoder({
+            success (e) {
+              _this.inCity['name'] = e.result.ad_info.city
+              _this.inCity['id'] = e.result.ad_info.adcode.replace(/.{2}$/, '00')
+              cityStore.commit('setInCity', _this.inCity)
+              if (!_this.companyCity.id) {
+                _this.companyCity = JSON.parse(JSON.stringify(_this.inCity))
+              }
+            }
+          })
+        } else {
+          this.companyCity = cityStore.state.inCity
+        }
+      } else {
+        this.companyCity = cityStore.state.city
+      }
+    }
+  },
+  onLoad (options) {
+    this.options = options
+    this.api = 'readCompany'
+    this.handleNew('readCompany')
+  },
   methods: {
     readSeeker,
     readJob,
     seekerNews,
     companyNews,
+    readCompany,
     handleClickJob (e, id) {
       this.$go('/pages/job/jobDetail/main?id=' + id)
     },
@@ -211,16 +297,31 @@ export default {
         this.$go('/pages/me-verify/main')
       }
     }
-  },
-  onLoad (options) {
-    // this.api = options['pages'] || 'readJob'
-    // this.handleNew('readJob')
-    this.api = 'person'
   }
 }
 </script>
 
 <style scoped>
+.kind{
+  color: #666;
+  display: flex;
+}
+.kind_item{
+}
+.kind_item::after{
+  content: '|';
+  display: inline-block;
+  margin: 0 15rpx;
+  color: #666;
+
+}
+.kind_item:last-child::after{
+  content: '';
+}
+
+.iibtn{
+  margin: 15rpx 30rpx;text-align:center;height:70rpx;background-color:#f2f2f2;color:#aaa;line-height:70rpx;border-radius:20rpx;
+}
 .person{
   min-height: 100vh;
   background-color: #f1f5f8;

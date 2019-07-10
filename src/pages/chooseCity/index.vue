@@ -27,7 +27,7 @@
           <div class="h3">选择城市</div>
           <div class="cities">
             <div class="city-item city-item-active" v-if="nowCity.name">{{nowCity.name}}</div>
-            <div class="city-item" @click="setCity({id:'',name:''})" :class="[!nowCity.id ? 'city-item-active' : '']">不限</div>
+            <div class="city-item" @click="setCity({id:'',name:'不限'})" :class="[!nowCity.id ? 'city-item-active' : '']">不限</div>
           </div>
           
           <!-- <div class="cities">

@@ -16,8 +16,8 @@ export const UPLOAD_PATH = REQUEST_API + '/index/asset/uploader'
 export const ACTION_RESPONSE = '/index/index/save_form'
 
 // 地图sdk
-// export const MAP_KEY = '2CABZ-4ZQYP-WKWDE-V5EX3-UPKP2-EPBKB'
-export const MAP_KEY = 'ODWBZ-UJQ6V-OMYPM-UZTEJ-IJMQF-LFBFB'
+export const MAP_KEY = '2CABZ-4ZQYP-WKWDE-V5EX3-UPKP2-EPBKB'
+// export const MAP_KEY = 'ODWBZ-UJQ6V-OMYPM-UZTEJ-IJMQF-LFBFB'
 
 // 角色
 export const ROLE = ['company', 'student', 'admin', 'teacher']

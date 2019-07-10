@@ -30,6 +30,7 @@ export default {
       // }
 
       if (key) {
+        this.emptys[key] = false
         this.$set(this.forms, key, {page: 0, limit: 10, ...options})
         this[this.api](this.forms[key]).then(data => {
           if (!this.firstLoads[key]) {
@@ -48,6 +49,7 @@ export default {
           this.$set(this.emptys, key, true)
         })
       } else {
+        this.empty = false
         this.$set(this, 'form', {...this.form, ...options})
         this[this.api](this.form).then(data => {
           if (!this.firstLoad) {

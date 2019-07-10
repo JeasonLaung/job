@@ -97,7 +97,7 @@ export default {
     }
   },
   onLoad (options) {
-    options['id'] = options['id'] || store.state.userInfo.company_id || 1
+    options['id'] = options['id'] || store.state.userInfo.company_id
     this.api = 'readJob'
     this.options = options
     this.form.company_id = options['id']
@@ -130,6 +130,9 @@ export default {
         scale: 18
       })
     }
+  },
+  onUnload () {
+    Object.assign(this, this.$options.data())
   }
 }
 </script>

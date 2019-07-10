@@ -166,7 +166,7 @@ export const getCities = () => {
 }
 
 export const getTypes = () => {
-  let c = cookie.get('type')
+  let c = cookie.get('job_type')
   if (c) {
     return new Promise((resolve, reject) => {
       resolve(c)
@@ -176,8 +176,8 @@ export const getTypes = () => {
       axios({
         url: '/job/position/type_list'
       }).then(data => {
-        cookie.set('type', data.list)
-        resolve(data)
+        cookie.set('job_type', data.list)
+        resolve(data.list)
       }).catch(data => {
         reject(data)
       })

@@ -8,11 +8,15 @@ const store = new Vuex.Store({
   state: {
     city: {id: '', name: ''},
     cityTemp: {id: '', name: ''},
-    province: {id: '', name: ''}
+    province: {id: '', name: ''},
+    inCity: {id: '', name: ''}
   },
   mutations: {
     setCity (state, data) {
       state.city = data
+    },
+    setInCity (state, data) {
+      state.inCity = data
     },
     clearCity (state, data) {
       state.city = {id: '', name: ''}
