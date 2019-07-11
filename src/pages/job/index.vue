@@ -43,6 +43,30 @@
         </m-load>
       </div>
       <div
+      v-else-if="api == 'readSeeker'">
+        <form report-submit @submit="$collect">
+          <div style="background-color:#fff;border-bottom:1rpx solid #eee">
+            <button form-type="submit" @click="$go('/pages/job/search/main?type=seeker')" class="init iibtn">搜索/筛选</button>
+          </div>
+        </form>
+        <m-load
+        height="calc(100vh - 100rpx)"
+        :firstLoad="firstLoads['readSeeker']"
+        :noMore="noMores['readSeeker']"
+        :empty="emptys['readSeeker']"
+        @new="handleNew('readSeeker')"
+        @more="handleMore('readSeeker')">
+          <div>
+            <seeker
+            border
+            @click="$go('/pages/job/seekerDetail/main?id='+item.id)"
+            :one="item"
+            v-for="(item, index) in results['readSeeker']"
+            :key="index"></seeker>
+          </div>
+        </m-load>
+      </div>
+      <div
       v-else-if="api == 'companyNews'">
         <m-load
         height="calc(100vh - 100rpx)"
@@ -61,17 +85,11 @@
       </div>
       <div
       v-else-if="api == 'readCompany'">
-        <search
-        @confirm="handleNew('readCompany', {keyword: keywordTmp['readCompany']})"
-        @change="keywordTmp['readCompany'] = $event;"
-        :value="keywordTmp['readCompany']"
-        >
-          <div slot="left">
-            <div @click="$go('/pages/chooseCity/main')">
-              <i class="iconfont icon-location" style="display:inline"></i>{{companyCity.name}}
-            </div>
+        <form report-submit @submit="$collect">
+          <div style="background-color:#fff;border-bottom:1rpx solid #eee">
+            <button form-type="submit" @click="$go('/pages/job/search/main?type=company')" class="init iibtn">搜索/筛选</button>
           </div>
-        </search>
+        </form>
         <m-load
         height="calc(100vh - 200rpx)"
         :firstLoad="firstLoads['readCompany']"
@@ -102,7 +120,7 @@
         <!-- 头部区域 -->
           <div class="head-area">
             <div class="avator-box" @click="handleAuth">
-                <img class="avator-img" :src="userInfo.avatar || '/static/images/person-default.png'"></img> 
+                <img class="avator-img" :src="userInfo.avatar || '/static/images/person-default.png'"/>
                 <div class="name" v-if="userInfo.real_name">{{userInfo.real_name}}</div>
                 <div v-else>
                   <open-data type="userNickName" class="name"></open-data>
@@ -149,28 +167,102 @@
                                 </a>
                               </button>
                             </form>
-                            <form class="form-id" @submit='$collect' report-submit="true" data-url="./seeker/collect/index">
+                            <form class="form-id" @submit='$collect' report-submit="true" data-url="./seeker/collect/main">
                               <button class="btn-formId" form-type='submit'>
                                 <a class="weui-cell weui-cell_access">
                                     <div class="weui-cell__hd"><img src="/static/images/Group3.png" /></div>
                                     <div class="weui-cell__bd weui-cell_primary">
-                                        <div>收藏职位</div>
+                                        <div>我的收藏</div>
                                     </div>
                                     <div class="arrow-right"></div>
                                 </a>
                               </button>
                             </form>
-                             <form class="form-id" @submit='$collect' report-submit="true" data-url="./seeker/followCompany/main">
-                              <button class="btn-formId" form-type='submit'> 
+                             <form class="form-id" @submit='$collect' report-submit="true">
+                              <div class="weui-cell weui-cell_access weui-contact">
+                                  <div class="weui-cell__hd"><img src="/static/images/icon-contact2.png" /></div>
+                                  <div class="weui-cell__bd weui-cell_primary">                             
+                                      <button class="btn-contact" open-type='contact' session-from="weapp" form-type='submit'>
+                                        客服中心
+                                      </button>                          
+                                  </div>
+                                  <div class="arrow-right"></div>
+                              </div>  
+                            </form> 
+                        </div>
+                    </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+      class="person"
+      v-else-if="api == 'hr'"
+      >
+        <div class="mine-wrap">
+        <!-- 头部区域 -->
+          <div class="head-area">
+            <div class="avator-box" @click="handleAuth">
+                <img class="avator-img" :src="userInfo.avatar || '/static/images/person-default.png'"></img> 
+                <div class="name" v-if="userInfo.real_name">{{userInfo.real_name}}</div>
+                <div v-else>
+                  <open-data type="userNickName" class="name"></open-data>
+                </div>
+            </div>
+            <div class="authen-box">     
+              <div class="authen-yg authen-btn" v-if="userInfo.role === 'company'">
+                <i class="iconfont icon-verify" style="display: inline;"></i>企业员工
+              </div>
+               <div class="authen-yg authen-btn" v-else-if="userInfo.role && userInfo.role !== 'company'">
+                <i class="iconfont icon-verify" style="display: inline;"></i>求职者
+              </div>
+              <button form-type="submit" open-type="getUserInfo" @click="handleAuth" class="authen-yg authen-btn init" v-else>
+                我要实名
+              </button>              
+            </div>
+          </div>
+          
+          <!-- 垂直栏目  -->
+          <div class="content-area">
+             <div class="weui-panel">
+                <div class="weui-panel__bd">
+                    <div class="weui-media-box weui-media-box_small-appmsg">
+                        <div class="weui-cells weui-cells_in-small-appmsg">
+                          <form class="form-id" @submit='$collect' report-submit="true" data-url="./company/publishJob/main">
+                              <button class="btn-formId" form-type='submit'>
                                 <a class="weui-cell weui-cell_access">
-                                    <div class="weui-cell__hd"><img src="/static/images/Group4.png" /></div>
+                                    <div class="weui-cell__hd"><img src="/static/images/position.png"  /></div>
                                     <div class="weui-cell__bd weui-cell_primary">
-                                        <div>我的推荐</div>
+                                        <div>我司职位</div>
                                     </div>
                                     <div class="arrow-right"></div>
-                                </a>  
-                               </button>
-                            </form>  
+                                </a>
+                              </button>
+                            </form>
+                            <form class="form-id" @submit='$collect' report-submit="true" data-url="./company/application/main">
+                              <button class="btn-formId" form-type='submit'>
+                                <a class="weui-cell weui-cell_access">
+                                    <div class="weui-cell__hd"><img src="/static/images/Group2.png"  /></div>
+                                    <div class="weui-cell__bd weui-cell_primary">
+                                        <div>求职申请</div>
+                                    </div>
+                                    <div class="arrow-right"></div>
+                                </a>
+                              </button>
+                            </form>
+                            <form class="form-id" @submit='$collect' report-submit="true" data-url="./company/invite/main">
+                              <button class="btn-formId" form-type='submit'>
+                                <a class="weui-cell weui-cell_access">
+                                    <div class="weui-cell__hd"><img src="/static/images/Group3.png" /></div>
+                                    <div class="weui-cell__bd weui-cell_primary">
+                                        <div>我的邀请</div>
+                                    </div>
+                                    <div class="arrow-right"></div>
+                                </a>
+                              </button>
+                            </form>
                              <form class="form-id" @submit='$collect' report-submit="true">
                               <div class="weui-cell weui-cell_access weui-contact">
                                   <div class="weui-cell__hd"><img src="/static/images/icon-contact2.png" /></div>
@@ -192,12 +284,16 @@
     </div>
 
 
+    
+
 
     <i-tab-bar :current="api" @change="handleChange" fixed color="#40B1F0">
       <i-tab-bar-item key="readJob" icon="job" current-icon="job" title="岗位"></i-tab-bar-item>
       <i-tab-bar-item key="readCompany" icon="company" current-icon="company" title="企业"></i-tab-bar-item>
+      <i-tab-bar-item key="readSeeker" icon="position" current-icon="position" title="人才"></i-tab-bar-item>
       <i-tab-bar-item key="seekerNews" icon="news" current-icon="news" title="资讯"></i-tab-bar-item>
-      <i-tab-bar-item key="person" icon="person" current-icon="person" count="3" title="我的"></i-tab-bar-item>
+      <i-tab-bar-item key="person" icon="person" current-icon="person" title="我的"></i-tab-bar-item>
+      <i-tab-bar-item key="hr" icon="person" current-icon="person" title="我的"></i-tab-bar-item>
     </i-tab-bar>
     <i-message id="message"></i-message>
     <i-toast id="toast"></i-toast>
@@ -209,12 +305,13 @@ import company from '@/components/job/company'
 import sLoadFuck from '@/mixins/sLoadFuck'
 import card from '@/components/card'
 import job from '@/components/job/job'
+import seeker from '@/components/job/seeker'
 import store from '@/store'
 import news from '@/components/news'
 import search from '@/components/job/search'
 import {readJob, seekerNews, companyNews, readSeeker, readCompany} from '@/api/job'
-import cityStore from '@/pages/chooseCity/store'
-import {qqmapsdk} from '@/utils/mapsdk'
+// import cityStore from '@/pages/chooseCity/store'
+// import {qqmapsdk} from '@/utils/mapsdk'
 export default {
   mixins: [sLoadFuck],
   components: {
@@ -222,7 +319,8 @@ export default {
     job,
     search,
     news,
-    company
+    company,
+    seeker
   },
 
   data () {
@@ -246,34 +344,34 @@ export default {
     }
   },
   onShow () {
-    let _this = this
-    if (!this.companyCity.id) {
-      // 没有选中城市
-      if (!cityStore.state.city.name) {
-        // 还没有定位
-        if (!cityStore.state.inCity.id) {
-          qqmapsdk.reverseGeocoder({
-            success (e) {
-              _this.inCity['name'] = e.result.ad_info.city
-              _this.inCity['id'] = e.result.ad_info.adcode.replace(/.{2}$/, '00')
-              cityStore.commit('setInCity', _this.inCity)
-              if (!_this.companyCity.id) {
-                _this.companyCity = JSON.parse(JSON.stringify(_this.inCity))
-              }
-            }
-          })
-        } else {
-          this.companyCity = cityStore.state.inCity
-        }
-      } else {
-        this.companyCity = cityStore.state.city
-      }
-    }
+    // let _this = this
+    // if (!this.companyCity.id) {
+    //   // 没有选中城市
+    //   if (!cityStore.state.city.name) {
+    //     // 还没有定位
+    //     if (!cityStore.state.inCity.id) {
+    //       qqmapsdk.reverseGeocoder({
+    //         success (e) {
+    //           _this.inCity['name'] = e.result.ad_info.city
+    //           _this.inCity['id'] = e.result.ad_info.adcode.replace(/.{2}$/, '00')
+    //           cityStore.commit('setInCity', _this.inCity)
+    //           if (!_this.companyCity.id) {
+    //             _this.companyCity = JSON.parse(JSON.stringify(_this.inCity))
+    //           }
+    //         }
+    //       })
+    //     } else {
+    //       this.companyCity = cityStore.state.inCity
+    //     }
+    //   } else {
+    //     this.companyCity = cityStore.state.city
+    //   }
+    // }
   },
   onLoad (options) {
     this.options = options
-    this.api = 'readCompany'
-    this.handleNew('readCompany')
+    this.api = 'readSeeker'
+    this.handleNew('readSeeker')
   },
   methods: {
     readSeeker,
@@ -288,9 +386,10 @@ export default {
     },
     handleChange (e) {
       this.api = e.target.key
-      if (this.api !== 'person') {
-        // this.handleNew(this.api)
-      }
+      console.log(this.api)
+      // if (this.api !== 'person' || this.api !== 'hr') {
+      //   this.handleNew(this.api)
+      // }
     },
     handleAuth () {
       if (!this.userInfo.role) {

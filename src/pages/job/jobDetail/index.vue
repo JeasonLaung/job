@@ -98,17 +98,15 @@
             分享
           </button>
           <button form-type="submit" @click="handleCollect" class="init">
-            <i class="iconfont" :style="{color: !isCollect ? '#333333' : '#DD5043'}" :class="['icon-heart' + (isCollect ? '-fill' : '')]"></i>
-            收藏
+            <i class="iconfont" :style="{color: !one.is_like ? '#333333' : '#DD5043'}" :class="['icon-heart' + (one.is_like ? '-fill' : '')]"></i>
+            <div>{{one.is_like ? '已收藏' : '收藏'}}</div>
           </button>
           <button 
           form-type="submit" 
-          open-type="getPhoneNumber"
-          v-if="!isSend"
           @click="handleSend"
-          @getPhoneNumber="getPhoneNumber" class="init">
-            <i class="iconfont" :style="{color: !isSend ? '#333333' : '#40B1F0'}" :class="['icon-plane' + (isSend ? '-fill' : '')]"></i>
-            {{!isSend ? '投递' : '已投递'}}
+          class="init">
+            <i class="iconfont icon-plane" :style="{color: !one.is_post ? '#333333' : '#40B1F0'}" :class="['icon-plane' + (one.is_post ? '-fill' : '')]"></i>
+            {{!one.is_post ? '投递' : '已投递'}}
           </button>
         </div>
       </div>
@@ -121,7 +119,7 @@
 <script>
 import linkman from '@/components/linkman'
 import job from '@/components/job/job'
-import {readJob, collectJob, sendJob, relativeJob, readPhone} from '@/api/job'
+import {readJob, relativeJob, readPhone, collectJob, uncollectJob, sendResume} from '@/api/job'
 import {wxtime} from '@/utils'
 import store from '@/store'
 import common from '@/mixins/common'
@@ -133,9 +131,10 @@ export default {
   mixins: [common],
   methods: {
     getHrPhone () {
+      let _this = this
       if (store.state.userInfo.role) {
         let id = this.one.user_id
-        readPhone({id}).then(data => {
+        readPhone({id, type: 'hr'}).then(data => {
           this.makePhoneCall(data.mobile)
         })
       } else {
@@ -145,7 +144,7 @@ export default {
           confirmColor: '#40B1F0',
           success ({confirm}) {
             if (confirm) {
-              this.$go('/pages/me-verify/main')
+              _this.$go('/pages/me-verify/main')
             }
           }
         })
@@ -155,13 +154,28 @@ export default {
       console.log('share')
     },
     handleCollect () {
-      collectJob()
-      console.log('collect')
+      let id = this.one['id']
+      if (!this.one.is_like) {
+        collectJob({id}).catch(data => {
+          this.one.is_like = false
+        })
+        this.one.is_like = true
+      } else {
+        uncollectJob({id}).catch(data => {
+          this.one.is_like = true
+        })
+        this.one.is_like = false
+      }
       this.isCollect = !this.isCollect
     },
     handleSend () {
-      sendJob()
-      console.log('send')
+      sendResume({id: this.one.id}).then(data => {
+        this.one.is_post = true
+        this.$Message({
+          content: '投递成功',
+          type: 'success'
+        })
+      })
     },
     getPhoneNumber () {
       console.log('send')
@@ -180,6 +194,7 @@ export default {
   },
   onShareAppMessage () {
     return {
+      title: this.one.name + ' ' + this.one.salary_lowest + '+ ' + this.one.company_name,
       path: '/pages/job/jobDetail/main?id=' + this.one.id
     }
   },
@@ -205,6 +220,9 @@ export default {
         this.relatives = []
       })
     })
+  },
+  onUnload () {
+    Object.assign(this, this.$options.data())
   }
 }
 </script>

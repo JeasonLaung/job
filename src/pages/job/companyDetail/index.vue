@@ -11,13 +11,25 @@
         v-if="isCompanyAdmin"
         @click="$go('/pages/editCompany/main?from=companyInfo&id=' + form.company_id)"
         ></icon>
+        <div 
+        v-else
+        class="company__header_edit">
+          <icon 
+          class="iconfont "
+          style="font-size:60rpx;"
+          :class="['icon-like' + (company.is_like ? '-fill' : '')]"
+          :style="{color:company.is_like ? '#DD5145': ''}"
+          @click="handleLike"
+          ></icon>
+          <div style="font-size: 30rpx;" :style="{color:company.is_like ? '#DD5145': ''}">{{company.is_like ? '已关注' : '关注'}}</div>
+        </div>
       </div>
 
       <div class="company__content">
         <div class="company__content_name">{{company.company}}</div>
         <div class="company_tags">
-          <i-tag i-class="custom-tag" color="green">{{company.type_name}}</i-tag>
-          <i-tag i-class="custom-tag" color="blue" v-if="company.company_number">{{company.company_number}}人</i-tag>
+          <i-tag i-class="custom-tag" color="green" v-if="company.type_name">{{company.type_name}}</i-tag>
+          <i-tag i-class="custom-tag" color="blue" v-if="company.company_number">{{company.company_number}}</i-tag>
           <i-tag i-class="custom-tag" color="" v-if="company.company_tel" @click="makePhoneCall(company.company_tel)"><i class="iconfont icon-phone" style="display:inline"></i>{{company.company_tel}}</i-tag>
         </div>
         <div 
@@ -58,8 +70,7 @@
 // Use Vuex
 import store from '@/store'
 import job from '@/components/job/job'
-import {readCompany} from '@/api/company'
-import {readJob} from '@/api/job'
+import {readJob, collectCompany, uncollectCompany, readCompany} from '@/api/job'
 import common from '@/mixins/common'
 import loadFuck from '@/mixins/loadFuck'
 export default {
@@ -78,7 +89,8 @@ export default {
         status: 1,
         address: '',
         lat: '',
-        lng: ''
+        lng: '',
+        is_like: false
       },
       staff: [],
       form: {
@@ -93,11 +105,15 @@ export default {
   },
   computed: {
     isCompanyAdmin () {
-      return store.state.userInfo.user_id === this.company.user_id
+      if (this.company.user_id) {
+        return store.state.userInfo.user_id === this.company.user_id
+      } else {
+        return false
+      }
     }
   },
   onLoad (options) {
-    options['id'] = options['id'] || store.state.userInfo.company_id
+    options['id'] = options['id'] || store.state.userInfo.company_id || 1
     this.api = 'readJob'
     this.options = options
     this.form.company_id = options['id']
@@ -121,6 +137,22 @@ export default {
   },
   methods: {
     readJob,
+    handleLike () {
+      let id = this.options.id
+      if (this.company.is_like) {
+        uncollectCompany({id}).then(data => {
+        }).catch(data => {
+          this.company.is_like = true
+        })
+        this.company.is_like = false
+      } else {
+        collectCompany({id}).then(data => {
+        }).catch(data => {
+          this.company.is_like = false
+        })
+        this.company.is_like = true
+      }
+    },
     openLocation () {
       let {lat, lng} = this.company
       mpvue.openLocation({
@@ -150,8 +182,9 @@ export default {
   justify-content: center;
   position: relative;
 }
+
 .company__header_edit{
-  font-size: 45rpx;
+  font-size: 60rpx;
   position: absolute;
   top: 40rpx;
   right: 40rpx;

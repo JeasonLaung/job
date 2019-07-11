@@ -73,7 +73,7 @@
             <div class="img-box"><img src="/static/images/edu.png"></img></div>
             <div class="info">
               <div class="info-name font-34">{{item.school_name}}</div>
-              <div class="info-position font-gray-26">{{item.subject}}</div>
+              <div class="info-position font-gray-26">{{item.education_name}} {{item.subject}}</div>
               <div class="info-date font-gray-26">{{item.in_time + " 至 " + (item.out_time || '今')}}</div>
             </div>
             <i class="iconfont icon-edit" data-page="education" :data-id="item.id" @click.stop="goResumeEdit"></i>

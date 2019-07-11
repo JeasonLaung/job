@@ -36,7 +36,7 @@
       @close="hideDrawer"
       mode="top"
       :visible="showDemand">
-        <div>
+        <div v-if="options.type != 'company'">
           <scroll-view scroll-y class="demand-drawer">
             <div class="list">
               <div class="list-title">薪酬</div>
@@ -73,6 +73,32 @@
                 :key="index"
                 @click="setActive('educationList', index)"
                 :class="{active:item.active}"
+                class="list-body-item">
+                  {{item.name}}
+                </div>
+              </div>
+            </div>
+          </scroll-view>
+          <form report-submit @submit="$collect">
+            <div style="height: 90rpx;display: flex;">
+              <button form-type="submit" class="init"  @click="clearDemand" style="background: #eee;flex: 1;line-height: 90rpx">重置</button>
+              <button form-type="submit" class="init" style="flex: 2;background: #40B1F0;color: #fff;line-height: 90rpx" @click="setDemand">确定</button>
+            </div>
+          </form>
+        </div>
+        <div
+        v-else>
+          <scroll-view
+          scroll-y
+          class="demand-drawer">
+            <div class="list">
+              <div class="list-title">行业</div>
+              <div class="list-body">
+                <div
+                v-for="(item, index) in industryList"
+                :key="index"
+                @click="industry_id = item.id"
+                :class="{active:item.id === industry_id}"
                 class="list-body-item">
                   {{item.name}}
                 </div>
@@ -130,10 +156,29 @@
       :firstLoad="firstLoad">
         <div v-if="options.type === 'job'">
           <job
+          border
           v-for="(item, index) in result"
           :key="index"
           :one="item"
           @click="$go('/pages/job/jobDetail/main?id=' + item.id)"
+          />
+        </div>
+        <div v-else-if="options.type === 'seeker'">
+          <seeker
+          border
+          v-for="(item, index) in result"
+          :key="index"
+          :one="item"
+          @click="$go('/pages/job/seekerDetail/main?id=' + item.id)"
+          />
+        </div>
+        <div v-else-if="options.type === 'company'">
+          <company
+          border
+          v-for="(item, index) in result"
+          :key="index"
+          :one="item"
+          @click="$go('/pages/job/companyDetail/main?id=' + item.id)"
           />
         </div>
       </m-load>
@@ -143,48 +188,59 @@
 
 <script>
 import job from '@/components/job/job'
+import seeker from '@/components/job/seeker'
+import company from '@/components/job/company'
 import sLoadFuck from '@/mixins/sLoadFuck'
 import cookie from '@/utils/cookie'
-import {readJob, getSearchType} from '@/api/job'
+import {readJob, getSearchType, readCompany, readSeeker} from '@/api/job'
 import search from '@/components/job/search'
 import typeStore from '@/pages/chooseType/store'
 import cityStore from '@/pages/chooseCity/store'
-import {qqmapsdk} from '@/utils/mapsdk'
+// import {qqmapsdk} from '@/utils/mapsdk'
 export default {
   components: {
     search,
-    job
+    job,
+    company,
+    seeker
   },
   mixins: [sLoadFuck],
   data () {
     return {
       mode: 1,
+      obj: {
+        job: 'readJob',
+        seeker: 'readSeeker',
+        company: 'readCompany'
+      },
       showDemand: false,
       showOrder: false,
       options: {},
       history: [],
       type: {id: '', name: ''},
-      city: {id: '', name: ''},
+      city: {id: '', name: '全国'},
       searchType: {},
       salaryList: [],
       educationList: [],
       experienceList: [],
       orderList: [],
+      industryList: [],
 
+      industry_id: '',
       keyword: '',
       location: {},
       order_id: 1,
       demand: {
-        experience_id: [],
-        education_id: [],
+        experience_ids: [],
+        education_ids: [],
         salary_id: ''
       },
       form: {
         page: 0,
         limit: 10,
         keyword: '',
-        education_id: '',
-        experience_id: '',
+        education_ids: [],
+        experience_ids: [],
         type_id: '',
         area_id: '',
         lat: '',
@@ -194,7 +250,7 @@ export default {
     }
   },
   onShow () {
-    let _this = this
+    // let _this = this
     let typeId = typeStore.state.type.id
     let cityId = cityStore.state.city.id
     let cityName = cityStore.state.city.name
@@ -209,18 +265,21 @@ export default {
       }
     } else if (cityName === '不限') {
       this.city = {id: '', name: '全国'}
+      this.handleSearch()
     } else {
-      qqmapsdk.reverseGeocoder({
-        success (e) {
-          _this.city.id = e.result.ad_info.adcode.replace(/.{2}$/, '00')
-          _this.city.name = e.result.ad_info.city.replace(/市/, '')
-          _this.location = e.result.location
-        }
-      })
+      // qqmapsdk.reverseGeocoder({
+      //   success (e) {
+      //     _this.city.id = e.result.ad_info.adcode.replace(/.{2}$/, '00')
+      //     _this.city.name = e.result.ad_info.city.replace(/市/, '')
+      //     _this.location = e.result.location
+      //   }
+      // })
     }
   },
   methods: {
     readJob,
+    readCompany,
+    readSeeker,
     handleClearHistory () {
       mpvue.showModal({
         title: '是否删除历史搜索',
@@ -241,28 +300,42 @@ export default {
       if (this.mode !== 2) {
         this.mode = 2
       }
-      this.form = {...this.demand, ...this.location, keyword: this.keyword, area_id: this.city.id, order_id: this.order_id, type_id: this.type.id}
-      console.log(this.form)
-      this.api = 'readJob'
+      console.log(this.options.type)
+      switch (this.options.type) {
+        case 'seeker':
+          this.api = 'readSeeker'
+          this.form = {keyword: this.keyword, area_id: this.city.id, ...this.demand, order_id: this.order_id}
+          break
+        case 'company':
+          this.api = 'readCompany'
+          this.form = {keyword: this.keyword, area_id: this.city.id, industry_id: this.industry_id, order_id: this.order_id}
+          break
+        case 'job':
+        default:
+          this.api = 'readJob'
+          this.form = {...this.demand, ...this.location, keyword: this.keyword, area_id: this.city.id, order_id: this.order_id, type_id: this.type.id}
+          break
+      }
       this.handleNew('', this.form)
       this.hideDrawer()
     },
     setDemand () {
-      this.demand.experience_id = []
-      this.demand.education_id = []
+      this.demand.experience_ids = []
+      this.demand.education_ids = []
       for (let i in this.educationList) {
         if (this.educationList[i].active) {
-          this.demand.education_id.push(this.educationList[i].id)
+          this.demand.education_ids.push(this.educationList[i].id)
         }
       }
       for (let i in this.experienceList) {
         if (this.experienceList[i].active) {
-          this.demand.experience_id.push(this.experienceList[i].id)
+          this.demand.experience_ids.push(this.experienceList[i].id)
         }
       }
       this.handleSearch()
     },
     clearDemand () {
+      this.industry_id = ''
       this.demand = {
         experience_id: [],
         education_id: [],
@@ -306,12 +379,16 @@ export default {
       this.experienceList = data.experienceList
       this.salaryList = data.salaryList
       this.orderList = data.orderList
+      this.industryList = data.industryList
     }
   },
   onLoad (options) {
-    options['type'] = options['type'] || 'job'
+    options['type'] = options['type'] || 'company'
     let type = options['type']
     this.options = options
+    if (type !== 'job') {
+      this.handleSearch()
+    }
     let hs = cookie.get('history_search_' + type)
     if (hs) {
       console.log(hs)

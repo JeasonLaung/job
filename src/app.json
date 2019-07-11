@@ -1,14 +1,20 @@
 {
   "pages": [
 
+    "pages/job/company/job/main",
     "pages/job/main",
+    "pages/job/company/application/main",
     "pages/job/search/main",
+    "pages/job/seeker/application/main",
+    "pages/job/jobDetail/main",
+    "pages/job/seeker/resume/main",
+    "pages/job/seeker/collect/main",
+    "pages/job/companyDetail/main",
     "pages/job/company/publishJob/main",
     
     "pages/job/seekerDetail/main",
     "pages/chooseCity/main",
     "pages/chooseType/main",
-    "pages/job/seeker/resume/main",
     "pages/job/seeker/resume/basic/main",
     "pages/job/seeker/resume/expect/main",
     "pages/job/seeker/resume/url/main",
@@ -20,19 +26,15 @@
     "pages/job/seeker/resume/language/main",
     "pages/job/seeker/resume/cert/main",
     "pages/job/seeker/resume/skill/main",
-    "pages/job/companyDetail/main",
-    "pages/job/jobDetail/main",
 
 
-    "pages/job/seeker/application/main",
-    "pages/job/seeker/collect/main",
-    "pages/job/seeker/followCompany/main",
+
+
     "pages/job/seeker/message/main",
 
 
     "pages/job/company/job/main",
     "pages/job/company/invite/main",
-    "pages/job/company/application/main",
     "pages/job/company/message/main",
     "pages/job/company/collect/main",
 
@@ -43,6 +45,8 @@
   ],
   "usingComponents": {
     "i-load-more": "../static/iview/load-more/index",
+    "i-tabs": "../static/iview/tabs/index",
+    "i-tab": "../static/iview/tab/index",
     "i-tab-bar": "../static/iview/tab-bar/index",
     "i-tab-bar-item": "../static/iview/tab-bar-item/index",
     "i-drawer": "../static/iview/drawer/index",

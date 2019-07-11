@@ -31,8 +31,21 @@
           <div class="weui-cell__bd">
             <picker mode="multiSelector" :range="salaryRange" @change="bindSalaryChange" @columnchange="columnchange">
               <div class="sex picker-inner">
-                <span class="placeholder" v-if="!form.salary_lowest">请选择期望月薪范围</span>
+                <span class="placeholder" v-if="!form.salary_highest">请选择期望月薪范围</span>
                   <span class="sex-val" wx:else>{{form.salary_lowest}}k - {{form.salary_highest}}k</span>
+                    <span class="arrow-right"></span>
+              </div>
+            </picker>
+          </div>
+        </div>
+        <div class="weui-cell weui-cell_input salary-input">
+          <div class="weui-cell__hd">
+            <div class="weui-label">开始工作年份</div></div>
+          <div class="weui-cell__bd">
+            <picker mode="date" field="month" @change="form.work_date=$event.target.value" :value="form.work_date">
+              <div class="sex picker-inner">
+                <span class="placeholder" v-if="!form.work_date">请选择开始工作年份</span>
+                  <span class="sex-val" wx:else>{{form.work_date}}</span>
                     <span class="arrow-right"></span>
               </div>
             </picker>
@@ -52,7 +65,7 @@
 <script>
 import {qqmapsdk} from '@/utils/mapsdk'
 import fixedBtn from '@/components/fixedBtn'
-import {readMyResume} from '@/api/job'
+import {readMyResume, saveResumeExpect} from '@/api/job'
 export default {
   components: {
     fixedBtn
@@ -74,6 +87,9 @@ export default {
   },
   methods: {
     save () {
+      saveResumeExpect(this.form).then(data => {
+        mpvue.navigateBack()
+      })
     },
     columnchange (e) {
       let max = []
@@ -87,11 +103,11 @@ export default {
       }
     },
     bindSalaryChange (e) {
-      this.form.salary_lowest = e.target.value[0]
+      this.form.salary_lowest = this.salaryRange[0][e.target.value[0]]
       this.form.salary_highest = this.salaryRange[1][e.target.value[1]]
     },
     bindRegionChange (e) {
-      this.form.area_id = e.target.value[e.target.value.length - 1]
+      this.form.area_id = e.target.code[e.target.value.length - 1]
       this.form.area_name = e.target.value[e.target.value.length - 1]
     }
   },
@@ -103,17 +119,16 @@ export default {
     }
     this.salaryRange = [min, min]
     readMyResume().then(data => {
-      this.form.position = data.position
-      this.form.work_date = data.work_date
-      this.form.area_id = data.area_id
-      this.form.area_name = data.area_name
-      this.form.salary_lowest = data.salary_lowest
-      this.form.salary_highest = data.salary_highest
-      console.log(data.area_name, data.area_name)
+      this.form.id = data.id
+      this.form.position = data.position || ''
+      this.form.work_date = data.work_date || ''
+      this.form.area_id = data.area_id || ''
+      this.form.area_name = data.area_name || ''
+      this.form.salary_lowest = data.salary_lowest || ''
+      this.form.salary_highest = data.salary_highest || ''
       if (!data.area_name) {
         qqmapsdk.reverseGeocoder({
           success (e) {
-            console.log(e)
             _this.form.area_name = e.result.ad_info.district
             _this.form.area_id = e.result.ad_info.adcode
           }

@@ -222,7 +222,7 @@ export default {
       })
     },
     bindSalaryChange (e) {
-      this.form.salary_lowest = e.target.value[0]
+      this.form.salary_lowest = this.salaryRange[0][e.target.value[0]]
       this.form.salary_highest = this.salaryRange[1][e.target.value[1]]
     },
     columnchange (e) {

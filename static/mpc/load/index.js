@@ -40,6 +40,7 @@ Component({
   },
   methods: {
      fuckNew () {
+      this.sclientY = 0
       this.eclientY = 0
       if (!this.data.isTop || this.data.ingNew) {
         return
@@ -73,7 +74,7 @@ Component({
       this.data.eclientY = e.touches[0].clientY
     },
     _bindtouchend (e) {
-      if (this.data.sclientY - this.data.eclientY < -30) {
+      if (this.data.sclientY - this.data.eclientY < -50) {
         this.fuckNew()
       }
     },

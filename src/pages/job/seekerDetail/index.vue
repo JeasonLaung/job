@@ -16,9 +16,9 @@
           <i style="display:inline" class="icon-sexw iconfont" v-else-if="basic.sex == 2" />
         </div>
         <!-- <div class="motto ell font-gray-26">{{basic.motto ? basic.motto : ''}}</div> -->
-        <div class="phone">
+        <div class="phone" @click="makePhoneCall(resume.mobile)">
           <i style="display:inline" class="icon-phone iconfont" />
-          <span class="font-gray-26">{{resume.mobile}}</span>
+          <span class="font-gray-26" >{{resume.mobile}}</span>
         </div>
         <div class="email">
           <i style="display:inline" class="icon-aite iconfont" />
@@ -62,7 +62,7 @@
             <div class="img-box"><img src="/static/images/edu.png"></img></div>
             <div class="info">
               <div class="info-name font-34">{{item.school_name}}</div>
-              <div class="info-position font-gray-26">{{item.subject}}</div>
+              <div class="info-position font-gray-26">{{item.education_name}}  {{item.subject}}</div>
               <div class="info-date font-gray-26">{{item.in_time + " 至 " + (item.out_time || '今')}}</div>
             </div>
           </div>
@@ -167,8 +167,13 @@
       </div>
       <div class="want font-34">
         <span class="key">期望月薪</span>
-        <span class="value" v-if="resume.salary_lowest && resume.salary_highest">{{resume.salary_lowest}}K - {{resume.salary_highest}}K</span>
+        <span class="value" v-if="resume.salary_highest">{{resume.salary_lowest}}K - {{resume.salary_highest}}K</span>
         <span class="value unselected" v-else>未选择</span>
+      </div>
+      <div class="want font-34">
+        <span class="key">开始工作时间</span>
+        <span class="value" v-if="work_date">{{resume.work_date}}</span>
+        <span class="value unselected" v-else>{{resume.work_date}}</span>
       </div>
     </div>
   </div>
@@ -180,10 +185,12 @@
 </template>
 
 <script>
+import common from '@/mixins/common'
 import {readResume} from '@/api/job'
 export default {
   components: {
   },
+  mixins: [common],
   computed: {
     lang () {
       let res = []

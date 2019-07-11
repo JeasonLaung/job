@@ -138,7 +138,7 @@ export default {
     this.options = options
     if (id) {
       readResumeExperience({id}).then(data => {
-        this.experience = data
+        this.experience = data || []
       })
     }
   }

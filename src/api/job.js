@@ -16,6 +16,7 @@ export const getSearchType = () => {
       axios({
         url: '/job/position/search_type'
       }).then(data => {
+        cookie.set('search_type', data)
         resolve(data)
       }).catch(data => {
         reject(data)
@@ -80,11 +81,17 @@ export const readJob = (data = {}) => {
   }
 }
 export const readPhone = (data = {}) => {
-  return axios({
-    error: false,
-    url: '/job/index/get_phone',
-    data
-  })
+  if (data['type'] === 'hr') {
+    return axios({
+      url: '/job/company/get_mobile',
+      data
+    })
+  } else if (data['type'] === 'seeker') {
+    return axios({
+      url: '/job/resume/get_mobile',
+      data
+    })
+  }
 }
 // 投简历
 export const relativeJob = (data = {}) => {
@@ -101,14 +108,43 @@ export const sendJob = (data = {}) => {
     data
   })
 }
-// 投简历
-export const collectJob = (data = {}) => {
+export const myCollectJob = (data = {}) => {
   return axios({
-    url: '/job/position/collect',
+    url: '/job/favorite/position_list',
     data
   })
 }
-
+export const myCollectCompany = (data = {}) => {
+  return axios({
+    url: '/job/favorite/company_list',
+    data
+  })
+}
+// 收藏
+export const collectJob = (data = {}) => {
+  return axios({
+    url: '/job/favorite/position_like',
+    data
+  })
+}
+export const uncollectJob = (data = {}) => {
+  return axios({
+    url: '/job/favorite/position_unlike',
+    data
+  })
+}
+export const collectCompany = (data = {}) => {
+  return axios({
+    url: '/job/favorite/company_like',
+    data
+  })
+}
+export const uncollectCompany = (data = {}) => {
+  return axios({
+    url: '/job/favorite/company_unlike',
+    data
+  })
+}
 // 求职攻略
 export const seekerNews = (data = {}) => {
   return axios({
@@ -132,11 +168,28 @@ export const companyNews = (data = {}) => {
 
 export const readSeeker = (data = {}) => {
   return axios({
-    url: '/article/index/article_list',
+    url: '/job/resume/resume_list',
     data: {
-      ...data,
-      id: 18
+      ...data
     }
+  })
+}
+export const resolveApplication = (data = {}) => {
+  return axios({
+    url: '/job/order/order_agree',
+    data
+  })
+}
+export const rejectApplication = (data = {}) => {
+  return axios({
+    url: '/job/order/order_refuse',
+    data
+  })
+}
+export const seeSeeker = (data = {}) => {
+  return axios({
+    url: '/job/order/order_check',
+    data
   })
 }
 
@@ -232,6 +285,7 @@ export const saveResumeBasic = (data = {}) => {
     method: 'POST'
   })
 }
+
 export const saveResumeExperience = (data = {}) => {
   if (data['id']) {
     return axios({
@@ -333,6 +387,7 @@ export const educationType = () => {
       resolve(c)
     } else {
       optionsJob().then(data => {
+        cookie.set('education', data)
         resolve(cookie.get('education'))
       })
     }
@@ -345,8 +400,48 @@ export const experienceType = () => {
       resolve(c)
     } else {
       optionsJob().then(data => {
+        cookie.set('experience', data)
         resolve(cookie.get('experience'))
       })
     }
   })
+}
+// 投简历
+export const sendResume = (data = {}) => {
+  return axios({
+    url: '/job/order/position_post',
+    method: 'POST',
+    data
+  })
+}
+
+export const mySend = (data = {}) => {
+  return axios({
+    url: '/job/order/user_order',
+    data: {
+      ...data
+    }
+  })
+}
+export const mySendDone = (data = {}) => {
+  return mySend({status: 2, ...data})
+}
+export const mySendNotDone = (data = {}) => {
+  return mySend({status: 1, ...data})
+}
+
+export const getApplication = (data = {}) => {
+  return axios({
+    url: '/job/order/company_order',
+    data: {
+      ...data
+    }
+  })
+}
+
+export const getApplicationDone = (data = {}) => {
+  return getApplication({status: 2, ...data})
+}
+export const getApplicationNotDone = (data = {}) => {
+  return getApplication({status: 1, ...data})
 }

@@ -30,7 +30,7 @@
         <div class="weui-cell__hd">
           <div class="weui-label">学历</div></div>
         <div class="weui-cell__bd">
-          <picker :value="professIndex" :range="professional" range-key="name" @change="professIndex=$event.target.value;education.education_id=professional[$event.target.value].name;">
+          <picker :value="professIndex" :range="professional" range-key="name" @change="professIndex=$event.target.value;education.education_id=professional[$event.target.value].id;">
             <div class="profess picker-inner">
               <span class="placeholder" v-if="education.education_id === null || education.education_id === ''">请选择学历</span>
                 <span class="profess-val" v-else>{{professional[professIndex].name}}</span>
