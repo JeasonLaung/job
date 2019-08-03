@@ -32,8 +32,6 @@
 
     "pages/job/seeker/message/main",
 
-
-    "pages/job/company/job/main",
     "pages/job/company/invite/main",
     "pages/job/company/message/main",
     "pages/job/company/collect/main",
